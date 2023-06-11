@@ -11,35 +11,44 @@ let totalHits = 0;
 
 form.addEventListener('submit', onSubmit);
 buttonLoad.addEventListener('click', onLoadMore);
-function onSubmit(e) {
+async function onSubmit(e) {
   e.preventDefault();
   gallery.innerHTML = '';
   page = 1;
-  searchQuery = e.currentTarget.elements.searchQuery.value;
-  getPhotos(searchQuery, page).then(data => {
-    if (data.hits.length !== 0) {
+  searchQuery = e.currentTarget.elements.searchQuery.value.trim();
+   if (searchQuery.length === 0) {
+    Notiflix.Notify.failure('Please enter a search query.');
+    return;
+   }
+  try {
+    const data = await getPhotos(searchQuery, page);
+       if (data.hits.length !== 0) {
       createMarkUp(data);
       totalHits = data.totalHits - 40;
       return;
     }
-    Notiflix.Notify.failure(
+  } catch (error) {
+     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
-  });
+  }
   e.currentTarget.reset();
 }
-function onLoadMore() {
+async function onLoadMore() {
   page += 1;
   totalHits -= 40;
-  
-  getPhotos(searchQuery, page).then(data => {
-     createMarkUp(data);
+
+  try {
+    const data = await getPhotos(searchQuery, page);
+createMarkUp(data);
      if (totalHits < 0) {
          Notiflix.Notify.failure(
              "We're sorry, but you've reached the end of search results."
              );
              buttonLoad.classList.add('is-hidden');
          }
-    }
-   );
+  } catch (error) {
+    console.error(error)
+  }
+  
 }

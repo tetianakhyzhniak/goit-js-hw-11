@@ -37,8 +37,11 @@ export function createMarkUp({ hits }) {
     </div>
   </a>`)
     .join('');
+  
   gallery.insertAdjacentHTML("beforeend", markUp);
   galleryModal.refresh();
-    buttonLoad.classList.remove("is-hidden");
+
+  buttonLoad.classList.remove("is-hidden");
+    
 }
 
