@@ -32,7 +32,7 @@ async function onSubmit(e) {
       'Sorry, there are no images matching your search query. Please try again.'
     );
   }
-  e.currentTarget.reset();
+  e.target.reset();
 }
 async function onLoadMore() {
   page += 1;
